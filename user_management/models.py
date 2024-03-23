@@ -1,14 +1,14 @@
 from django.db import models
 from .utils import DeviceTypes
-
+from django.contrib.auth.models import AbstractBaseUser
 
 class BaseModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class User(BaseModel):
-    email = models.EmailField()
+class User(AbstractBaseUser):
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
     password = models.CharField(max_length=20)
     is_delete = models.BooleanField(default=False)
@@ -18,3 +18,10 @@ class User(BaseModel):
     last_device = models.IntegerField(
         choices=DeviceTypes.choices, null=True, blank=True
     )
+
+    # def save(self):
+    USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return self.email
+
